@@ -17,29 +17,21 @@ cardapio = pd.DataFrame(data, columns=["codigos", "itens", "precos"])
 total = 0
 
 
+def calcular_total(codigo):  # verifica o preço e item correspondente ao código dado e retorna o total do pedido.
+    item = cardapio[cardapio["codigos"] == codigo]["itens"].item()
+    preco = cardapio[cardapio["codigos"] == codigo]["precos"].item()
+    print("Você adicionou ao pedido um {} no valor de R${}.\n".format(item, preco))
+    return total + preco
+
+def perguntar_add_pedido(resposta):
+    pass
+
 while True:
     try:
-        codigo = int(input("\nCódigo do pedido: "))
-        item = cardapio[cardapio["codigos"] == codigo]["itens"].item()
-        preco = cardapio[cardapio["codigos"] == codigo]["precos"].item()
-        total += preco
-        print("Você adicionou ao pedido um {} no valor de R${}.\n".format(item, preco))
+        codigo_item = int(input("\nCódigo do pedido: "))
+        total_pedido = calcular_total(codigo_item)
 
-        while True:
-            add_item = input("Deseja adicionar mais um item ao pedido? (S/N): ")
-            if add_item in ("S", "N"):
-                break
-            else:
-                print("Resposta inválida. Tente novamente.")
-                continue
-
-        if add_item == "N":
-            print("\nTotal a pagar: R${}.".format(total))
-            break
-        else:
-            continue
 
     except (ValueError, ValueError):
         print("Opção Inválida. Tente novamente.")
         continue
-
