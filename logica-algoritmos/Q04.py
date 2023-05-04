@@ -1,5 +1,3 @@
-# talvez criar um dicionário mais organazado para os itens.
-
 from tabulate import tabulate
 
 print("\nBem Vindo ao Controle de Estoque da Bicicletaria da Ana Carla!")
@@ -9,53 +7,71 @@ pecas = {}  # receberá as informações dos itens
 
 
 def cadastrar_peca(codigo):  # adiciona peça ao dict pecas
-    print("Código: ", codigo)
-    nome = input("Nome da peça: ")
-    fabricante = input("Fabricante: ")
-    valor = float(input("Valor (R$): "))
 
-    pecas[codigo] = [nome, fabricante, valor]  # atribui as informações(values) no código(key)
-    print("Peça adicionada com sucesso!")
+    while True:
+        try:
+            print("Casdastro de Peça")
+            print("Código: ", codigo)
+            nome = input("Nome: ")
+            fabricante = input("Fabricante: ")
+            valor = float(input("Valor: "))
+
+            pecas[codigo] = [nome, fabricante, valor]
+            print("Peça adicioanda com sucesso!")
+            break
+
+        except ValueError:
+            print("Você digitou algum valor inválido. Tente novamente")
+            continue
 
 
-headers = ["Código", "Produto", "Fabricante", "Preço"]  # títulos das colunas da tabela de consulta
+headers = ["Código", "Nome", "Fabricante", "Preço"]
 
 
 def consultar_peca():  # pergunta forma de consulta e retorna item(ens)
-    print("\n___CONSULTAR PEÇA___")
-    print("\n1 - Consultar tudo\n2 - Consultar por Código\n3 - Consultar por Fabricante\n4 - Voltar")
-    print("___________________")
-    consulta = int(input("\nEscolha a opção desejada: "))
-
     while True:
-        peca = []  # recebe as informações da peça consultada
         try:
-            if consulta == 1:
-                print("\n___________________PEÇAS__________________")
-                # gera tebela formatada com todos os itens:
-                return print(tabulate([[k, ] + v for k, v in pecas.items()], headers=headers))
+            print("\nConsultar Peça")
+            print("\n1 - Consultar Tudo\n2 - Consultar por Código\n3 - Consultar por Fabricante\n4 - Voltar")
+            print("___________________\n")
+            resposta = int(input("Escolha a opção desejada: "))
 
-            if consulta == 2:
-                consulta_codigo = int(input("Código: "))
-                peca.append(pecas[consulta_codigo])
-                return print(tabulate(peca, headers=headers))  # printa
+            if resposta == 1:
+                print(tabulate([[k, ] + v for k, v in pecas.items()], headers=headers))
 
-            if consulta == 2:
-                consulta_fabricante = input("Fabricante: ")
-                for value in pecas.values():
-                    if consulta_fabricante == value:
-                        peca.append(value)
+            if resposta == 2:
+                codigo_consulta = int(input("Código: "))
+                if codigo_consulta in pecas.keys():
+                    print(tabulate([[k, ] + v for k, v in pecas.items() if k == codigo_consulta], headers=headers))
 
-            if consulta == 2:
-                pass
+                else:
+                    print("Código não encontrado.")
 
-        except IndexError:  # repete o loop caso o usuário cometa erro de digitação
-            print("O banco de dados de peças está vazio. Adicione peças.")
+            if resposta == 3:
+                fabricante_consulta = input("Fabricante: ")
+                fabricantes = [i[1] for i in pecas.values()]
+                if fabricante_consulta in fabricantes:
+                    print(tabulate([[k, ] + v for k, v in pecas.items() if v[1] == fabricante_consulta], headers=headers))
+
+                else:
+                    print("Fabricante não encontrado.")
+
+            if resposta == 4:
+                break
+
+        except ValueError:
+            print("Opção inválida. Tente novamente.")
             continue
 
 
 def remover_peca():
-    pass
+    print("Remover Peça")
+    codigo_remover = int(input("Código: "))
+    if codigo_remover in pecas.keys():
+        del pecas[codigo_remover]
+        print("Peça removida com sucesso.")
+    else:
+        print("Código não encontrado.")
 
 
 def menu():
@@ -70,7 +86,7 @@ def menu():
             resposta = int(input("Escolha a opção desejada: "))
 
             if resposta == 1:
-                novo_codigo = len(pecas) + 1  # gera um novo código que será adicionado ao dict pecas
+                novo_codigo = len(pecas)+1
                 cadastrar_peca(novo_codigo)
                 continue
 
@@ -79,7 +95,8 @@ def menu():
                 continue
 
             if resposta == 3:
-                pass
+                remover_peca()
+                continue
 
             if resposta == 4:
                 break  # encerra o programa
